@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(iverilog *)",
+      "Bash(python3 *)",
+      "Read(//mnt/c/Users/**)",
+      "Read(///wsl.localhost/Ubuntu-20.04//**)",
+      "Read(///wsl.localhost/Ubuntu-20.04/home/xyfyy/**)",
+      "Read(//mnt/wsl/localhost/Ubuntu-20.04/home/xyfyy/**)",
+      "Bash(wsl *)",
+      "Bash(ls \"\\\\\\\\wsl.localhost\\\\Ubuntu-20.04\\\\home\\\\xyfyy\\\\riscv_cpu_verify\")",
+      "Read(//mnt/wsl/Ubuntu-20.04/home/xyfyy/**)",
+      "Read(///wsl.localhost/Ubuntu-20.04/home/xyfyy/riscv_cpu_verify/**)",
+      "Read(//usr/local/bin/**)",
+      "Read(//snap/bin/**)",
+      "Bash(dpkg -l)",
+      "Bash(apt list *)"
+    ]
+  }
+}
