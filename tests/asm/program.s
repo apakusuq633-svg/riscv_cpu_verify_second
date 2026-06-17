@@ -137,4 +137,6 @@ JALR_OK:
     addi x31, x0, 99       # 如果执行到这里，说明 flush 有问题
 
 end:
-    beq x0, x0, end
+    addi x28, x0, 1
+    sw   x28, 0x3F0(x0)       # tohost: write 1 = PASS
+    beq  x0, x0, end
