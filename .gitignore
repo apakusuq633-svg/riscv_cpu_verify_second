@@ -1,0 +1,22 @@
+# Simulation artifacts (generated, large files)
+sim/*.vcd
+sim/*.vvp
+sim/*.log
+
+# Compiled ELF / binary
+tests/elf/
+tests/bin/
+
+# Temporary images / notes
+*.png
+*.jpg
+*.md.html
+
+# IDE / editor
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+Desktop.ini

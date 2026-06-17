@@ -38,12 +38,28 @@ module IM(
         end
     end
 
-    // 读操作: x0 始终返回 0, 转发优先
-    always @(posedge clk or negedge rst) begin
-        read_data1 = (ForwardingA && rs1 != 5'b00000) ? ALU_result :
-                     (rs1 == 5'b00000) ? 32'h0000_0000 : register_file[rs1];
-        read_data2 = (ForwardingB && rs2 != 5'b00000) ? ALU_result :
-                     (rs2 == 5'b00000) ? 32'h0000_0000 : register_file[rs2];
+  // 读操作：组合读，x0 始终返回 0
+always @(*) begin
+    if (rs1 == 5'b00000) begin
+        read_data1 = 32'h0000_0000;
+    end else if (we3 && (rd == rs1) && (rd != 5'b00000)) begin
+        read_data1 = write_data;      // 同周期写后读旁路
+    end else if (ForwardingA) begin
+        read_data1 = ALU_result;
+    end else begin
+        read_data1 = register_file[rs1];
     end
 
+    if (rs2 == 5'b00000) begin
+        read_data2 = 32'h0000_0000;
+    end else if (we3 && (rd == rs2) && (rd != 5'b00000)) begin
+        read_data2 = write_data;      // 同周期写后读旁路
+    end else if (ForwardingB) begin
+        read_data2 = ALU_result;
+    end else begin
+        read_data2 = register_file[rs2];
+    end
+end
+
 endmodule
+//寄存器一般是时钟上升沿读，写的时候是组合逻辑

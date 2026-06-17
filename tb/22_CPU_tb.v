@@ -1,3 +1,6 @@
+//          ./tools/assemble.sh tests/asm/program.s
+//          iverilog -g2012 -Wall -o sim/cpu_tb.vvp tb/22_CPU_tb.v rtl/*.v
+//          vvp sim/cpu_tb.vvp +hexfile=tests/hex/program.hex +nocheck
 // ============================================================================
 // RISC-V RV32I 5-Stage Pipeline CPU Testbench
 // ============================================================================
@@ -28,7 +31,49 @@ module CPU_tb;
         rst = 0;
 
         // 多跑一会儿，确保流水线完全排空
-        #2000;
+        #800;
+            // ================================================================
+            $display("--- Register File ---");
+            $display("  x0=%08h  x1(ra)=%08h  x2(sp)=%08h  x3(gp)=%08h",
+                     cpu.reg_file.register_file[0],
+                     cpu.reg_file.register_file[1],
+                     cpu.reg_file.register_file[2],
+                     cpu.reg_file.register_file[3]);
+            $display("  x4(tp)=%08h  x5(t0)=%08h  x6(t1)=%08h  x7(t2)=%08h",
+                     cpu.reg_file.register_file[4],
+                     cpu.reg_file.register_file[5],
+                     cpu.reg_file.register_file[6],
+                     cpu.reg_file.register_file[7]);
+            $display("  x8(s0)=%08h  x9(s1)=%08h  x10(a0)=%08h  x11(a1)=%08h",
+                     cpu.reg_file.register_file[8],
+                     cpu.reg_file.register_file[9],
+                     cpu.reg_file.register_file[10],
+                     cpu.reg_file.register_file[11]);
+            $display("  x12(s2)=%08h  x13(s3)=%08h  x14(s4)=%08h  x15(s5)=%08h",
+                     cpu.reg_file.register_file[12],
+                     cpu.reg_file.register_file[13],
+                     cpu.reg_file.register_file[14],
+                     cpu.reg_file.register_file[15]);
+            $display("  x16(s6)=%08h  x17(s7)=%08h  x18(s8)=%08h  x19(s9)=%08h",
+                     cpu.reg_file.register_file[16],
+                     cpu.reg_file.register_file[17],
+                        cpu.reg_file.register_file[18],
+                        cpu.reg_file.register_file[19]);
+            $display("  x20(s10)=%08h  x21(s11)=%08h  x22(t3)=%08h  x23(t4)=%08h",
+                        cpu.reg_file.register_file[20],
+                        cpu.reg_file.register_file[21],
+                        cpu.reg_file.register_file[22],
+                        cpu.reg_file.register_file[23]);
+            $display("  x24(t5)=%08h  x25(t6)=%08h  x26(s12)=%08h  x27(s13)=%08h",
+                        cpu.reg_file.register_file[24],
+                        cpu.reg_file.register_file[25],
+                        cpu.reg_file.register_file[26],
+                        cpu.reg_file.register_file[27]);
+            $display("  x28(s14)=%08h  x29(s15)=%08h  x30(s16)=%08h  x31(s17)=%08h",
+                        cpu.reg_file.register_file[28],     
+                        cpu.reg_file.register_file[29],
+                        cpu.reg_file.register_file[30],
+                        cpu.reg_file.register_file[31]);
 
         $display("\n========== Simulation Done ==========");
         $display("Check sim/cpu.vcd waveform for verification.");
@@ -48,14 +93,7 @@ module CPU_tb;
     // ========================================================================
     // 流水线全信号追踪 — 每个时钟周期打印所有编码信号
     // ========================================================================
-    integer cycle;
-    initial begin
-        cycle = 0;
-    end
 
-    always @(posedge clk) begin
-        if (!rst) begin
-            cycle = cycle + 1;
 
             /*
             // ================================================================
@@ -149,18 +187,4 @@ module CPU_tb;
             // ================================================================
             // Register File Values (x0 - x7)
             // ================================================================
-            $display("--- Register File ---");
-            $display("  x0=%08h  x1(ra)=%08h  x2(sp)=%08h  x3(gp)=%08h",
-                     cpu.reg_file.register_file[0],
-                     cpu.reg_file.register_file[1],
-                     cpu.reg_file.register_file[2],
-                     cpu.reg_file.register_file[3]);
-            $display("  x4(tp)=%08h  x5(t0)=%08h  x6(t1)=%08h  x7(t2)=%08h",
-                     cpu.reg_file.register_file[4],
-                     cpu.reg_file.register_file[5],
-                     cpu.reg_file.register_file[6],
-                     cpu.reg_file.register_file[7]);
-        end
-    end
-
 endmodule

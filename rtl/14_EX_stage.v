@@ -19,14 +19,13 @@ module EX_stage(
     input wire [1:0] ForwardBE,
     input wire [31:0] ALU_result_M,
     input wire [31:0] write_data_W,
-
     output wire [31:0] ALU_result,
     output wire zero_flag,
     output wire [31:0] branch_target,
     output wire [31:0] jump_target,
     output wire [31:0] pc_plus_4,
     output wire [31:0] store_data
-);
+);  
     wire [31:0] SrcA_fwd;
     wire [31:0] SrcA;
     wire [31:0] SrcB_nomux;

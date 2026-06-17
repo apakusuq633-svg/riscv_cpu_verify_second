@@ -28,7 +28,7 @@ module ID_EX(
     input wire [4:0] rd,
     input wire [2:0] funct3,
     input wire [6:0] funct7,
-
+    
     // ---- EX 阶段控制信号 ----
     output reg RegWriteE,
     output reg MemtoRegE,
@@ -77,7 +77,7 @@ module ID_EX(
             funct3_out <= 3'b000;
             funct7_out <= 7'b0000000;
         end else if (flush) begin
-            // 冲突时清空: 插入 NOP (控制信号清零)
+            // 冲突/分支清空: 插入 NOP (所有信号清零)
             RegWriteE  <= 1'b0;
             MemtoRegE  <= 1'b0;
             MemWriteE  <= 1'b0;
@@ -90,6 +90,15 @@ module ID_EX(
             LUIE       <= 1'b0;
             AUIPCE     <= 1'b0;
             JALRE      <= 1'b0;
+            PC_out     <= 32'h0000_0000;
+            RD1_out    <= 32'h0000_0000;
+            RD2_out    <= 32'h0000_0000;
+            imm_out    <= 32'h0000_0000;
+            rs1_out    <= 5'b00000;
+            rs2_out    <= 5'b00000;
+            rd_out     <= 5'b00000;
+            funct3_out <= 3'b000;
+            funct7_out <= 7'b0000000;
         end else begin
             RegWriteE  <= RegWriteD;
             MemtoRegE  <= MemtoRegD;

@@ -14,7 +14,11 @@
       "Read(//usr/local/bin/**)",
       "Read(//snap/bin/**)",
       "Bash(dpkg -l)",
-      "Bash(apt list *)"
+      "Bash(apt list *)",
+      "Bash(git -C /home/xyfyy/riscv_cpu_verify remote -v)",
+      "Bash(git -C /home/xyfyy/riscv_cpu_verify log --oneline -5)",
+      "Bash(gh auth *)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }

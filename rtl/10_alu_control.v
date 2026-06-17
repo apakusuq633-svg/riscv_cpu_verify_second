@@ -6,6 +6,7 @@ module alu_control (
     input wire [1:0] ALUOp,             // 控制单元输出的 ALU 操作码
     input wire [2:0] funct3,            // funct3 字段 (bits 14:12)
     input wire [6:0] funct7,            // funct7 字段 (bits 31:25)
+    input wire ALUSrc,              // ALUSrc 信号 (立即数或寄存器选择)
     output reg [3:0] ALUControl         // ALU 控制信号 (4-bit)
 );
     // ALU 操作编码
@@ -31,8 +32,8 @@ module alu_control (
             // R-type / I-type ALU: 由 funct3 + funct7[30] 决定
             2'b10: begin
                 case (funct3)
-                    3'b000: // ADD / SUB
-                        ALUControl = funct7[5] ? ALU_SUB : ALU_ADD;
+                    3'b000: // ADD / SUB 或 ADDI
+                            ALUControl = (!ALUSrc && funct7[5]) ? ALU_SUB : ALU_ADD;
                     3'b001: ALUControl = ALU_SLL;   // SLL / SLLI
                     3'b010: ALUControl = ALU_SLT;   // SLT / SLTI
                     3'b011: ALUControl = ALU_SLTU;  // SLTU / SLTIU

@@ -62,10 +62,11 @@ module CPU_top(
     wire [1:0] ForwardAE, ForwardBE;
 
     // ========================================================================
-    // Branch Flush — 分支/跳转后清空 IF/ID 和 ID/EX
+    // Branch flush: EX 阶段判定分支跳转后, 清空 IF_ID 和 ID_EX
     // ========================================================================
     wire flush_branch;
     assign flush_branch = branch_taken;
+
     wire flush_ID_EX_combined;
     assign flush_ID_EX_combined = flush_ID_EX | flush_branch;
 
@@ -119,12 +120,15 @@ module CPU_top(
     // Branch Unit
     // ========================================================================
     wire branch_taken;
-    wire [31:0] branch_next_pc;
+    wire [31:0] branch_target_pc;
 
-    // ========================================================================
-    // PC Update (from branch/jump unit)
-    // ========================================================================
-    assign next_pc = branch_next_pc;
+    // Sequential PC
+    wire [31:0] pc_plus_4;
+    assign pc_plus_4 = PC + 32'd4;
+
+  assign next_pc = branch_taken ? branch_target_pc :
+                 stall        ? PC :
+                                pc_plus_4;
 
     // ========================================================================
     // == IF Stage ==
@@ -154,7 +158,7 @@ module CPU_top(
         .PC_in(PC),
         .instruction_in(instruction_IF),
         .stall(stall),
-        .flush(flush_branch),
+        .flush(flush_branch),            // 分支跳转时清空 IF_ID
         .PC_out(PC_ID),
         .instruction_out(instruction_ID)
     );
@@ -306,6 +310,7 @@ module CPU_top(
         .ALUOp(ALUOpE),
         .funct3(funct3_EX),
         .funct7(funct7_EX),
+        .ALUSrc(ALUSrcE),
         .ALUControl(ALUControl)
     );
 
@@ -381,30 +386,30 @@ module CPU_top(
     // == Branch / Jump Unit ==
     // ========================================================================
     branch_unit branch_ctrl(
-        .BranchM(BranchM),
-        .JumpM(JumpM),
-        .JALRM(JALRM),
-        .funct3(funct3_MEM),
-        .zero_flag(zero_flag_MEM),
-        .ALU_result(ALU_result_MEM),
-        .branch_target(branch_target_MEM),
-        .jump_target(jump_target_MEM),
-        .pc_plus_4(pc_plus_4_MEM),
-        .next_pc(branch_next_pc),
+        .Branch(BranchE),
+        .Jump(JumpE),
+        .JALR(JALRE),
+        .funct3(funct3_EX),
+        .zero_flag(zero_flag_EX),
+        .ALU_result(ALU_result_EX),
+        .branch_target(branch_target_EX),
+        .jump_target(jump_target_EX),
+        .target_pc(branch_target_pc),
         .branch_taken(branch_taken)
     );
 
     // ========================================================================
     // == MEM Stage ==
     // ========================================================================
-    MEM_stage mem_stage(
-        .clk(clk),
-        .rst(rst),
-        .MemWriteM(MemWriteM),
-        .MemReadM(MemReadM),
-        .ALU_result(ALU_result_MEM),
-        .RD2(RD2_MEM),
-        .read_data(read_data_MEM)
+   MEM_stage mem_stage(
+    .clk(clk),
+    .rst(rst),
+    .MemWriteM(MemWriteM),
+    .MemReadM(MemReadM),
+    .funct3M(funct3_MEM),
+    .ALU_result(ALU_result_MEM),
+    .RD2(RD2_MEM),
+    .read_data(read_data_MEM)
     );
 
     // ========================================================================

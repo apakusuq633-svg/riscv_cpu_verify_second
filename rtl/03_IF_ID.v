@@ -4,7 +4,7 @@ module IF_ID(
     input wire [31:0] PC_in,
     input wire [31:0] instruction_in,
     input wire stall,
-    input wire flush,                   // 分支跳转清空
+    input wire flush,
     output reg [31:0] PC_out,
     output reg [31:0] instruction_out
 );
@@ -13,7 +13,7 @@ module IF_ID(
             PC_out <= 32'h0000_0000;
             instruction_out <= 32'h0000_0000;
         end else if (flush) begin
-            // 分支跳转后: 插入 NOP (addi x0, x0, 0)
+            // 分支跳转/冲突: 插入 NOP, 清空错误路径指令
             PC_out <= 32'h0000_0000;
             instruction_out <= 32'h00000013;
         end else if (!stall) begin

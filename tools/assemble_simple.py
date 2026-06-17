@@ -71,13 +71,20 @@ def encode_s(imm, rs2, rs1, funct3, opcode):
 
 
 def encode_b(imm, rs2, rs1, funct3, opcode):
-    # imm is a byte offset; must be even (bit 0 is discarded)
-    imm12 = imm & 0x1fff
-    imm12_shift = imm12 >> 1
-    bit12   = (imm12_shift >> 11) & 0x1
-    bits10_5 = (imm12_shift >> 5)  & 0x3f
-    bits4_1  = imm12_shift & 0xf
-    bit11    = (imm12_shift >> 4)  & 0x1
+    # B-type immediate is a signed byte offset.
+    # Encoded bits: imm[12|10:5|4:1|11], imm[0] is always 0.
+    if imm % 2 != 0:
+        raise ValueError(f"B-type branch offset must be 2-byte aligned: {imm}")
+    if imm < -4096 or imm > 4094:
+        raise ValueError(f"B-type branch offset out of range: {imm}")
+
+    imm13 = imm & 0x1fff
+
+    bit12    = (imm13 >> 12) & 0x1
+    bit11    = (imm13 >> 11) & 0x1
+    bits10_5 = (imm13 >> 5)  & 0x3f
+    bits4_1  = (imm13 >> 1)  & 0xf
+
     return (bit12 << 31) | (bits10_5 << 25) | ((rs2 & 0x1f) << 20) | \
            ((rs1 & 0x1f) << 15) | ((funct3 & 0x7) << 12) | \
            (bits4_1 << 8) | (bit11 << 7) | (opcode & 0x7f)
@@ -193,7 +200,18 @@ def resolve_operand(tok, labels, pc):
         return labels[tok] - pc
     return parse_imm(tok)
 
+def check_signed_range(value, bits, name="immediate"):
+    lo = -(1 << (bits - 1))
+    hi = (1 << (bits - 1)) - 1
+    if value < lo or value > hi:
+        raise ValueError(f"{name} out of signed {bits}-bit range: {value}")
 
+
+def check_unsigned_range(value, bits, name="immediate"):
+    lo = 0
+    hi = (1 << bits) - 1
+    if value < lo or value > hi:
+        raise ValueError(f"{name} out of unsigned {bits}-bit range: {value}")
 # ---------------------------------------------------------------------------
 # single-line assembler
 # ---------------------------------------------------------------------------
@@ -220,42 +238,65 @@ def assemble_line(line, labels, pc):
         f7, f3 = rtype_map[op]
         return encode_r(f7, rs2, rs1, f3, rd, OP_RTYPE)
 
-    # ---- I-type ALU ----
+       # ---- I-type ALU ----
     if op in ('addi', 'andi', 'ori', 'xori', 'slti', 'sltiu', 'slli', 'srli', 'srai'):
         rd  = parse_reg(tokens[1])
         rs1 = parse_reg(tokens[2])
         imm = parse_imm(tokens[3])
-        imm = sign_extend(imm, 12)
+
         itype_map = {
             'addi':  0x0, 'slli':  0x1, 'slti':  0x2,
             'sltiu': 0x3, 'xori':  0x4,
             'srli':  0x5, 'srai':  0x5, 'ori':   0x6, 'andi': 0x7,
         }
         f3 = itype_map[op]
-        # slli / srli / srai 需要 funct7 中的特殊位
-        if op == 'slli':
-            return encode_r(0x00, imm & 0x1f, rs1, f3, rd, OP_ITYPE)  # shamt in rs2 field
-        if op == 'srli':
-            return encode_r(0x00, imm & 0x1f, rs1, f3, rd, OP_ITYPE)
-        if op == 'srai':
-            return encode_r(0x20, imm & 0x1f, rs1, f3, rd, OP_ITYPE)
-        return encode_i(imm & 0xfff, rs1, f3, rd, OP_ITYPE)
+
+        # RV32I shift-immediate: shamt is 5 bits, 0..31
+        if op in ('slli', 'srli', 'srai'):
+            check_unsigned_range (imm, 5, "shift amount")
+            if op == 'slli':
+                return encode_r(0x00, imm, rs1, f3, rd, OP_ITYPE)
+            if op == 'srli':
+                return encode_r(0x00, imm, rs1, f3, rd, OP_ITYPE)
+            if op == 'srai':
+                return encode_r(0x20, imm, rs1, f3, rd, OP_ITYPE)
+
+        check_signed_range (imm, 12, "I-type immediate")
+        return encode_i(imm, rs1, f3, rd, OP_ITYPE)
 
     # ---- Load ----
-    if op == 'lw':
+     
+     
+    if op in ('lb', 'lh', 'lw', 'lbu', 'lhu'):
         rd  = parse_reg(tokens[1])
         imm = parse_imm(tokens[2])
         rs1 = parse_reg(tokens[3])
-        imm = sign_extend(imm, 12)
-        return encode_i(imm & 0xfff, rs1, 0x2, rd, OP_LOAD)
+        check_signed_range(imm, 12, f"{op} immediate")
 
-    # ---- Store ----
-    if op == 'sw':
+        load_funct3 = {
+            'lb':  0x0,
+            'lh':  0x1,
+            'lw':  0x2,
+            'lbu': 0x4,
+            'lhu': 0x5,
+        }
+
+        return encode_i(imm, rs1, load_funct3[op], rd, OP_LOAD)
+
+        # ---- Store ----
+    if op in ('sb', 'sh', 'sw'):
         rs2 = parse_reg(tokens[1])
         imm = parse_imm(tokens[2])
         rs1 = parse_reg(tokens[3])
-        imm = sign_extend(imm, 12)
-        return encode_s(imm & 0xfff, rs2, rs1, 0x2, OP_STORE)
+        check_signed_range(imm, 12, f"{op} immediate")
+
+        store_funct3 = {
+            'sb': 0x0,
+            'sh': 0x1,
+            'sw': 0x2,
+        }
+
+        return encode_s(imm, rs2, rs1, store_funct3[op], OP_STORE)
 
     # ---- Branches (support labels as immediate) ----
     if op in ('beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu'):
@@ -276,12 +317,13 @@ def assemble_line(line, labels, pc):
         return encode_j(imm, rd, OP_JAL)
 
     # ---- JALR ----
+    
     if op == 'jalr':
         rd  = parse_reg(tokens[1])
         rs1 = parse_reg(tokens[2])
         imm = parse_imm(tokens[3])
-        imm = sign_extend(imm, 12)
-        return encode_i(imm & 0xfff, rs1, 0x0, rd, OP_JALR)
+        check_signed_range(imm, 12, "jalr immediate")
+        return encode_i(imm, rs1, 0x0, rd, OP_JALR)
 
     # ---- LUI ----
     if op == 'lui':

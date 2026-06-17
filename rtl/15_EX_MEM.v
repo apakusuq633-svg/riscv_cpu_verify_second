@@ -57,6 +57,8 @@ module EX_MEM(
             pc_plus_4_out     <= 32'h0000_0000;
             zero_flag_out      <= 1'b0;
             funct3_out        <= 3'b000;
+       
+       
         end else begin
             RegWriteM         <= RegWriteE;
             MemtoRegM         <= MemtoRegE;
