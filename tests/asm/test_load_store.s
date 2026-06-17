@@ -7,17 +7,10 @@
 # ============================================================================
 
     # ----------------------------------------------------------------
-    # Test 1: sw + lw — basic store/load word
+    # Test 1: sw + lw — basic store/load with a 32-bit value
+    #    Build 0x00123456 piecewise (can't load 32-bit as immediate)
     # ----------------------------------------------------------------
-    addi x1, x0, 0xDEADBEEF
-    sw   x1, 0x00(x0)           # mem[0x00] = 0xDEADBEEF
-    lw   x3, 0x00(x0)
-    addi x4, x0, 0x0            # can't load 32-bit imm directly
-    # Compare: x3 should be 0xDEADBEEF
-    # Use xor to check equality (xor of equal values = 0)
-    # But we can't easily load 0xDEADBEEF as immediate...
-    # Actually, let me use a simpler pattern:
-    addi x1, x0, 0x123          # use a value that fits in 12-bit
+    addi x1, x0, 0x123          # x1 = 0x00000123
     slli x1, x1, 12             # x1 = 0x00123000
     addi x1, x1, 0x456          # x1 = 0x00123456
     sw   x1, 0x00(x0)
@@ -92,12 +85,15 @@
     bne  x5, x0, fail_407
 
     # ----------------------------------------------------------------
-    # Test 8: sh + lh — positive halfword
+    # Test 8: sh + lh — positive halfword (max positive 16-bit: 0x7FFF)
+    #    Build 0x7FFF = 0x8000 - 1 via lui + addi
     # ----------------------------------------------------------------
-    addi x1, x0, 0x7FFF         # max positive 16-bit signed
+    lui  x1, 0x8                # x1 = 0x00008000
+    addi x1, x1, -1             # x1 = 0x00007FFF
     sh   x1, 0x1A(x0)
     lh   x3, 0x1A(x0)
-    addi x4, x0, 0x7FFF
+    lui  x4, 0x8
+    addi x4, x4, -1             # expected = 0x7FFF
     bne  x3, x4, fail_408
 
     # ----------------------------------------------------------------

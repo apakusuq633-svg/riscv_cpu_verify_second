@@ -152,7 +152,7 @@ def tokenize(line):
 # two-pass assembler
 # ---------------------------------------------------------------------------
 def assemble_file(src, dst):
-    with open(src, 'r') as f:
+    with open(src, 'r', encoding='utf-8') as f:
         raw_lines = f.readlines()
 
     # ---- Pass 1: collect label addresses --------------------------------
@@ -188,7 +188,7 @@ def assemble_file(src, dst):
             instrs.append(code)
             pc += 4
 
-    with open(dst, 'w') as f:
+    with open(dst, 'w', encoding='utf-8') as f:
         for ic in instrs:
             f.write(f"{ic:08x}\n")
 
