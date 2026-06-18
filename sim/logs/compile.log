@@ -1,6 +1,4 @@
 rtl/02_IF.v:50: warning: @* is sensitive to all 256 words in array 'instruction_memory'.
-rtl/07_IM.v:50: warning: @* is sensitive to all 32 words in array 'register_file'.
-rtl/07_IM.v:60: warning: @* is sensitive to all 32 words in array 'register_file'.
 rtl/17_data_mem.v:68: warning: @* is sensitive to all 1024 words in array 'data_memory'.
 rtl/17_data_mem.v:68: warning: @* is sensitive to all 1024 words in array 'data_memory'.
 rtl/17_data_mem.v:73: warning: @* is sensitive to all 1024 words in array 'data_memory'.
