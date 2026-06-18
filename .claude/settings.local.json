@@ -43,7 +43,18 @@
       "Bash(bash tools/run_tests.sh test_jump)",
       "Bash(python tools/assemble_simple.py tests/asm/test_jump.s tests/hex/test_jump.hex)",
       "Bash(where vvp *)",
-      "Bash(code *)"
+      "Bash(code *)",
+      "Bash(vvp -V)",
+      "Bash(chmod +x tools/build.sh)",
+      "Bash(bash tools/build.sh detect)",
+      "Bash(bash *)",
+      "Bash(make --version)",
+      "Bash(cmd.exe /c \"where iverilog 2>nul\")",
+      "Bash(cmd.exe /c \"where vvp 2>nul\")",
+      "Bash(ls -la /d/iverilog*)",
+      "Bash(ls -la /c/iverilog*)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/**)"
     ]
   }
 }
