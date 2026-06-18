@@ -18,7 +18,32 @@
       "Bash(git -C /home/xyfyy/riscv_cpu_verify remote -v)",
       "Bash(git -C /home/xyfyy/riscv_cpu_verify log --oneline -5)",
       "Bash(gh auth *)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(git commit *)",
+      "Bash(gh repo *)",
+      "Bash(git add *)",
+      "Bash(chmod +x tools/run_tests.sh)",
+      "Bash(which iverilog *)",
+      "Bash(where iverilog *)",
+      "Bash(ls \"C:/iverilog/bin/iverilog.exe\")",
+      "Bash(ls \"/c/Program Files/Icarus Verilog/bin/iverilog.exe\")",
+      "Bash(cmd.exe //c \"where iverilog\")",
+      "Read(//mnt/c/iverilog/**)",
+      "Bash(git push *)",
+      "Bash(bash tools/run_tests.sh)",
+      "Read(//c/iverilog/bin/**)",
+      "Read(//c/Program Files/iverilog/bin/**)",
+      "Bash(cmd.exe /c \"where iverilog\")",
+      "Read(//usr/bin/**)",
+      "Read(//mingw64/bin/**)",
+      "Bash(ls /c/Program*/iverilog/bin/iverilog.exe)",
+      "Read(//c/tools/iverilog/bin/**)",
+      "Read(//d//**)",
+      "Bash(bash tools/assemble.sh tests/asm/test_jump.s tests/hex/test_jump.hex)",
+      "Bash(bash tools/run_tests.sh test_jump)",
+      "Bash(python tools/assemble_simple.py tests/asm/test_jump.s tests/hex/test_jump.hex)",
+      "Bash(where vvp *)",
+      "Bash(code *)"
     ]
   }
 }

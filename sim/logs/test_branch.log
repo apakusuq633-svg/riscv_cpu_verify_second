@@ -1,0 +1,38 @@
+tb/22_CPU_tb.v:31: Warning: Calling system function $value$plusargs() as a task.
+tb/22_CPU_tb.v:31:          The functions return value will be ignored.
+tb/22_CPU_tb.v:32: Warning: Calling system function $value$plusargs() as a task.
+tb/22_CPU_tb.v:32:          The functions return value will be ignored.
+tb/22_CPU_tb.v:33: Warning: Calling system function $value$plusargs() as a task.
+tb/22_CPU_tb.v:33:          The functions return value will be ignored.
+WARNING: rtl/02_IF.v:26: $readmemh(tests/hex/test_branch.hex): Not enough words in the file for the requested range [0:255].
+IF: Loaded program from                                                                                                        tests/hex/test_branch.hex
+======================================================================
+  RISC-V RV32I 5-Stage Pipeline CPU Test
+  Test:                                                                                                                      test_branch
+======================================================================
+[PASS]                                                                                                                      test_branch  (cycles=149)
+
+--- Final Register File ---
+  x0=00000000  x1(ra)=00000001  x2(sp)=00000001  x3(gp)=00000000
+  x4(tp)=00000000  x5(t0)=00000014  x6(t1)=00000014  x7(t2)=0000006f
+  x8(s0)=000000de  x9(s1)=00000000  x10(a0)=000000de  x11(a1)=00000000
+  x12(s2)=00000000  x13(s3)=00000000  x14(s4)=00000000  x15(s5)=00000000
+  x16(s6)=00000000  x17(s7)=00000000  x18(s8)=00000000  x19(s9)=00000000
+  x20(s10)=00000000  x21(s11)=00000000  x22(t3)=00000000  x23(t4)=00000000
+  x24(t5)=00000000  x25(t6)=00000000  x26(s12)=00000000  x27(s13)=00000000
+  x28(s14)=00000000  x29(s15)=00000000  x30(s16)=00000000  x31(s17)=00000000
+
+========== Simulation Done ==========
+
+--- Final Register File ---
+  x0=00000000  x1(ra)=00000001  x2(sp)=00000001  x3(gp)=00000000
+  x4(tp)=00000000  x5(t0)=00000014  x6(t1)=00000014  x7(t2)=0000006f
+  x8(s0)=000000de  x9(s1)=00000000  x10(a0)=000000de  x11(a1)=00000000
+  x12(s2)=00000000  x13(s3)=00000000  x14(s4)=00000000  x15(s5)=00000000
+  x16(s6)=00000000  x17(s7)=00000000  x18(s8)=00000000  x19(s9)=00000000
+  x20(s10)=00000000  x21(s11)=00000000  x22(t3)=00000000  x23(t4)=00000000
+  x24(t5)=00000000  x25(t6)=00000000  x26(s12)=00000000  x27(s13)=00000000
+  x28(s14)=00000001  x29(s15)=00000000  x30(s16)=00000000  x31(s17)=00000000
+
+========== Simulation Done ==========
+

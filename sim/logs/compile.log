@@ -1,0 +1,15 @@
+rtl/02_IF.v:50: warning: @* is sensitive to all 256 words in array 'instruction_memory'.
+rtl/07_IM.v:50: warning: @* is sensitive to all 32 words in array 'register_file'.
+rtl/07_IM.v:60: warning: @* is sensitive to all 32 words in array 'register_file'.
+rtl/17_data_mem.v:68: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:68: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:73: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:74: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:75: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:80: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:81: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:82: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:83: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:88: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:94: warning: @* is sensitive to all 1024 words in array 'data_memory'.
+rtl/17_data_mem.v:95: warning: @* is sensitive to all 1024 words in array 'data_memory'.
