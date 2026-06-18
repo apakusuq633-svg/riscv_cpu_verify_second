@@ -332,6 +332,8 @@ module CPU_top(
         .ForwardBE(ForwardBE),
         .ALU_result_M(ALU_result_MEM),
         .write_data_W(write_data),
+        .JumpM(JumpM),
+        .pc_plus_4_M(pc_plus_4_MEM),
         .ALU_result(ALU_result_EX),
         .zero_flag(zero_flag_EX),
         .branch_target(branch_target_EX),

@@ -53,9 +53,9 @@ test4:
     jal  x2, jalr4_anchor
 jalr4_anchor:
     # x2 = address of jalr4_anchor. Target is jalr4_target.
-    # Offset from jalr4_anchor to jalr4_target is known (count instrs * 4)
-    # jalr4_anchor at offset 0, jalr4_target is 2 instrs later = 8 bytes
-    addi x2, x2, 8              # x2 = address of jalr4_target
+    # Offset from jalr4_anchor to jalr4_target (count instrs * 4):
+    #   addi + jalr + POISON1 + POISON2 = 4 instrs = 16 bytes
+    addi x2, x2, 16             # x2 = address of jalr4_target
     jalr x0, x2, 0              # jump to jalr4_target via jalr
     addi x5, x0, 0              # POISON 1 (flushed)
     addi x5, x0, 0              # POISON 2 (flushed)
@@ -81,7 +81,7 @@ jump5_loop:
     jal  x1, jal6_mid           # save return addr in x1, jump to jal6_mid
     addi x5, x0, 0              # POISON (flushed)
 jal6_mid:
-    addi x1, x1, 4              # x1 = addr of the instruction AFTER the next
+    addi x1, x1, 16             # x1 = addr of the instruction AFTER the next
     jalr x0, x1, 0              # jump to x1, skipping "addi x5, x0, 99"
     addi x5, x0, 99             # should be SKIPPED by jalr
     addi x6, x0, 0
